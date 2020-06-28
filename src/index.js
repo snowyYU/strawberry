@@ -16,13 +16,7 @@ const isDevMode = process.env.NODE_ENV === 'production' ? false : true
 /**
  * 使用koa-compose 集成中间件
  */
-const middleware = compose([
-  koaBody(),
-  statics(path.join(__dirname, '../public')),
-  cors(),
-  jsonutil({ pretty: false, param: 'pretty' }),
-  helmet(),
-])
+const middleware = compose([koaBody(), statics(path.join(__dirname, '../public')), cors(), jsonutil({ pretty: false, param: 'pretty' }), helmet()])
 
 if (!isDevMode) {
   app.use(compress())
