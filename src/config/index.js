@@ -1,0 +1,3 @@
+const DB_URL = 'mongodb://test:123456@39.98.151.75:8199/testdb'
+
+export default { DB_URL }
