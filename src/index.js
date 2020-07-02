@@ -1,4 +1,5 @@
 import koa from 'koa'
+import JWT from 'koa-jwt'
 import path from 'path'
 import helmet from 'koa-helmet'
 import statics from 'koa-static'
@@ -13,6 +14,8 @@ const app = new koa()
 
 const isDevMode = process.env.NODE_ENV === 'production' ? false : true
 
+// 定义公共路径
+const jwt = JWT({ secret: 'shared-secret' }).unless({ path: [/^\/public/] })
 /**
  * 使用koa-compose 集成中间件
  */
