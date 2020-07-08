@@ -10,16 +10,26 @@ import cors from '@koa/cors'
 import compose from 'koa-compose'
 import compress from 'koa-compress'
 
+import config from './config'
+import errorHandle from './common/ErrorHandle'
 const app = new koa()
 
 const isDevMode = process.env.NODE_ENV === 'production' ? false : true
 
 // 定义公共路径
-const jwt = JWT({ secret: 'shared-secret' }).unless({ path: [/^\/public/] })
+const jwt = JWT({ secret: config.JWT_SECRET }).unless({ path: [/^\/public/, /^\/login/] })
 /**
  * 使用koa-compose 集成中间件
  */
-const middleware = compose([koaBody(), statics(path.join(__dirname, '../public')), cors(), jsonutil({ pretty: false, param: 'pretty' }), helmet()])
+const middleware = compose([
+  koaBody(),
+  statics(path.join(__dirname, '../public')),
+  cors(),
+  jsonutil({ pretty: false, param: 'pretty' }),
+  helmet(),
+  errorHandle,
+  jwt,
+])
 
 if (!isDevMode) {
   app.use(compress())
