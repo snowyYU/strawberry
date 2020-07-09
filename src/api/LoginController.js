@@ -2,6 +2,8 @@ import send from '../config/MailConfig'
 import moment from 'moment'
 import jsonwebtoken from 'jsonwebtoken'
 import config from '../config'
+import { checkCode } from '../common/Utils'
+import User from '../model/User'
 class LoginController {
   constructor() {}
   async forget(ctx) {
@@ -30,11 +32,31 @@ class LoginController {
     const { body } = ctx.request
     let sid = body.sid
     let code = body.code
-    checkCode(sid, code)
-    let token = jsonwebtoken.sign({ _id: 'jasper' }, config.JWT_SECRET, { expiresIn: '1h' })
-    ctx.body = {
-      code: 200,
-      token: token,
+    if (sid && checkCode(sid, code)) {
+      // 验证密码
+      console.log('check pass')
+      let checkUserPwd = ''
+      let user = await User.findOne({ username: body.username })
+      if (user.password === body.password) {
+        checkUserPwd = true
+      }
+      if (checkUserPwd) {
+        let token = jsonwebtoken.sign({ _id: 'jasper' }, config.JWT_SECRET, { expiresIn: '1h' })
+        ctx.body = {
+          code: 200,
+          token: token,
+        }
+      } else {
+        ctx.body = {
+          code: 404,
+          msg: '用户名密码错误',
+        }
+      }
+    } else {
+      ctx.body = {
+        code: 401,
+        msg: '图片验证码不正确',
+      }
     }
   }
 }
