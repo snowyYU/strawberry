@@ -29,12 +29,16 @@ const client = redis.createClient(options)
 client.on('error', function (error) {
   console.error('连接失败', error)
 })
-const setValue = (key, value) => {
+const setValue = (key, value, time) => {
   if (typeof value === 'undefined' || value == null || value == '') {
     return
   }
   if (typeof value === 'string') {
-    client.set(key, value)
+    if (typeof time !== 'undefined') {
+      client.set(key, value, 'EX', time)
+    } else {
+      client.set(key, value)
+    }
   } else if (typeof value === 'object') {
     Object.keys(value).forEach((item) => {
       client.hset(key, item, value[item], redis.print)
