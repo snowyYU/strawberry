@@ -30,7 +30,7 @@ client.on('error', function (error) {
   console.error('连接失败', error)
 })
 const setValue = (key, value, time) => {
-  if (typeof value === 'undefined' || value == null || value == '') {
+  if (typeof value === 'undefined' || value == null || value === '') {
     return
   }
   if (typeof value === 'string') {

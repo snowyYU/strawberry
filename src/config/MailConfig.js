@@ -1,5 +1,5 @@
-'use strict'
-import nodemailer from 'nodemailer'
+"use strict";
+import nodemailer from "nodemailer";
 
 // async..await is not allowed in global scope, must use a wrapper
 async function send(sendInfo) {
@@ -8,15 +8,15 @@ async function send(sendInfo) {
   // let testAccount = await nodemailer.createTestAccount()
 
   // create reusable transporter object using the default SMTP transport
-  let transporter = nodemailer.createTransport({
-    host: 'smtp.qq.com',
+  const transporter = nodemailer.createTransport({
+    host: "smtp.qq.com",
     port: 587,
     secure: false, // true for 465, false for other ports
     auth: {
-      user: '731444920@qq.com', // generated ethereal user
-      pass: 'raikqmpowrklbbdj', // generated ethereal password
+      user: "731444920@qq.com", // generated ethereal user
+      pass: "raikqmpowrklbbdj", // generated ethereal password
     },
-  })
+  });
 
   // const sendInfo = {
   //   code: '1234',
@@ -25,12 +25,12 @@ async function send(sendInfo) {
   //   user: 'jasper',
   // }
   // send mail with defined transport object
-  let url = 'https://baidu.com'
+  const url = "https://baidu.com";
 
-  let info = await transporter.sendMail({
+  const info = await transporter.sendMail({
     from: '"Fred Foo 👻" <731444920@qq.com>', // sender address
     to: sendInfo.email, // list of receivers
-    subject: sendInfo.user !== '' ? `hi,${sendInfo.user}` : 'hi~', // Subject line
+    subject: sendInfo.user !== "" ? `hi,${sendInfo.user}` : "hi~", // Subject line
     text: `邀请码为${sendInfo.code},邀请码过期时间:${sendInfo.expire}`, // plain text body
     html: `<div style="border: 1px solid #dcdcdc;color: #676767;width: 600px; margin: 0 auto; padding-bottom: 50px;position: relative;">
     <div style="height: 60px; background: #393d49; line-height: 60px; color: #58a36f; font-size: 18px;padding-left: 10px;">Imooc社区——欢迎来到官方社区</div>
@@ -41,9 +41,9 @@ async function send(sendInfo) {
     </div>
     <div style="background: #fafafa; color: #b4b4b4;text-align: center; line-height: 45px; height: 45px; position: absolute; left: 0; bottom: 0;width: 100%;">系统邮件，请勿直接回复</div>
 </div>`, // html body
-  })
+  });
 
-  return 'Message sent: %s', info.messageId
+  return `Message sent: %s, ${info.messageId}`;
   // console.log('Message sent: %s', info.messageId)
   // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 
@@ -53,4 +53,4 @@ async function send(sendInfo) {
 }
 
 // main().catch(console.error)
-export default send
+export default send;

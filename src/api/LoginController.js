@@ -6,11 +6,10 @@ import config from '../config'
 import { checkCode } from '../common/Utils'
 import User from '../model/User'
 class LoginController {
-  constructor() {}
   async forget(ctx) {
     const { body } = ctx.request
     try {
-      let result = await send({
+      const result = await send({
         code: '1234',
         expire: moment().add(30, 'minutes').format('YYYY-MM-DD HH:mm:ss'),
         email: body.username,
@@ -25,26 +24,29 @@ class LoginController {
       console.log(e)
     }
   }
+
   async login(ctx) {
     // 接受用户的数据
     // 验证图片验证码的时效性，正确行
     // 验证用户账号密码是否正确
     // 返回token
     const { body } = ctx.request
-    let sid = body.sid
-    let code = body.code
-    let result = await checkCode(sid, code)
+    const sid = body.sid
+    const code = body.code
+    const result = await checkCode(sid, code)
     if (sid && result) {
       // 验证密码
       console.log('check pass')
       let checkUserPwd = ''
       // 查询mongoDB
-      let user = await User.findOne({ username: body.username })
+      const user = await User.findOne({ username: body.username })
       if (await bcrypt.compare(body.password, user.password)) {
         checkUserPwd = true
       }
       if (checkUserPwd) {
-        let token = jsonwebtoken.sign({ _id: 'jasper' }, config.JWT_SECRET, { expiresIn: '1h' })
+        const token = jsonwebtoken.sign({ _id: 'jasper' }, config.JWT_SECRET, {
+          expiresIn: '1h',
+        })
         ctx.body = {
           code: 200,
           token: token,
@@ -62,24 +64,25 @@ class LoginController {
       }
     }
   }
+
   async reg(ctx) {
     // 接收客户端数据
     const { body } = ctx.request
     // 校验验证码
-    let sid = body.sid
-    let code = body.code
-    let msg = {}
-    let result = await checkCode(sid, code)
+    const sid = body.sid
+    const code = body.code
+    const msg = {}
+    const result = await checkCode(sid, code)
     let check = true
     if (result) {
       // 查库 username 是否被注册
-      let user1 = await User.findOne({ username: body.username })
+      const user1 = await User.findOne({ username: body.username })
       if (user1 !== null && typeof user1.username !== 'undefined') {
         msg.username = ['该邮箱已经注册，可以通过邮箱找回密码']
         check = false
       }
       // 查库 name 是否被注册
-      let user2 = await User.findOne({ name: body.name })
+      const user2 = await User.findOne({ name: body.name })
       if (user2 !== null && typeof user2.name !== 'undefined') {
         msg.username = ['此昵称已被注册']
         check = false
@@ -88,13 +91,13 @@ class LoginController {
       // 写入到数据库
       if (check) {
         body.password = await bcrypt.hash(body.password, 5)
-        let user = new User({
+        const user = new User({
           username: body.username,
           name: body.name,
           password: body.password,
           created: moment().format('YYYY-MM-DD HH:mm:ss'),
         })
-        let result = await user.save()
+        const result = await user.save()
         ctx.body = {
           code: 200,
           data: result,
