@@ -1,5 +1,9 @@
 import mongoose from 'mongoose'
 import config from './index'
+
+mongoose.set('useCreateIndex', true)
+
+// 创建连接
 mongoose.connect(config.DB_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,

@@ -1,4 +1,5 @@
 import Post from '../model/Post'
+import Links from '../model/Links'
 class ContentController {
   async getPostList(ctx) {
     // const post = new Post({
@@ -27,7 +28,7 @@ class ContentController {
     if (typeof body.isTop !== 'undefined') {
       options.isTop = body.isTop
     }
-    if (typeof body.status !== 'undefined') {
+    if (typeof body.status !== 'undefined' && body.status !== '') {
       options.status = body.status
     }
     if (typeof body.isEnd !== 'undefined') {
@@ -41,6 +42,33 @@ class ContentController {
       code: 200,
       data: result,
       msg: '获取列表成功',
+    }
+  }
+
+  // 查询友链
+  async getLinks(ctx) {
+    const result = await Links.find({ type: 'links' })
+    ctx.body = {
+      code: 200,
+      data: result,
+    }
+  }
+
+  // 查询温馨提醒
+  async getTips(ctx) {
+    const result = await Links.find({ type: 'tips' })
+    ctx.body = {
+      code: 200,
+      data: result,
+    }
+  }
+
+  // 本周热议
+  async getTopWeek(ctx) {
+    const result = await Post.getTopWeek()
+    ctx.body = {
+      code: 200,
+      data: result,
     }
   }
 }

@@ -39,8 +39,18 @@ PostSchema.statics = {
       .limit(limit)
       .populate({
         path: 'uid',
-        select: 'name',
+        select: 'name isVip pic',
       })
+  },
+  getTopWeek: function () {
+    return this.find(
+      {
+        created: { $gte: moment().subtract(7, 'days') },
+      },
+      { answer: 1, title: 1 }
+    )
+      .sort({ answer: -1 })
+      .limit(15)
   },
 }
 const PostModel = mongoose.model('posts', PostSchema)

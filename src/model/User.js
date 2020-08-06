@@ -11,7 +11,7 @@ const UserSchema = new Schema({
   favs: { type: Number, default: 100 }, //	否	100	//用户积分
   gender: { type: String, default: '' }, //	否	0	默认 0男 //1女
   roles: { type: Array, default: ['user'] }, //	否	user	角色，user-普通用户，admin-管理员，super_admin - //超级管理员
-  pic: { type: String }, //	否		//用户头像
+  pic: { type: String, default: '' }, //	否		//用户头像
   mobile: { type: String, match: /^1[3-9]\d{9}$/, default: '' }, //	否		//手机号码
   status: { type: String, default: '0' }, //	否	0	是否被禁用 0-正常，1-禁言，2-//账号禁用
   regmark: { type: String, default: '' }, // 签名
