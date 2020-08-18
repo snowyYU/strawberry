@@ -44,11 +44,22 @@ class LoginController {
         checkUserPwd = true
       }
       if (checkUserPwd) {
-        const token = jsonwebtoken.sign({ _id: 'jasper' }, config.JWT_SECRET, {
-          expiresIn: '1h',
+        const userObj = user.toJSON()
+        const arr = ['password', 'username', 'roles']
+        arr.map((item) => {
+          delete userObj[item]
         })
+
+        const token = jsonwebtoken.sign(
+          { _id: userObj._id },
+          config.JWT_SECRET,
+          {
+            expiresIn: '1h',
+          }
+        )
         ctx.body = {
           code: 200,
+          data: userObj,
           token: token,
         }
       } else {

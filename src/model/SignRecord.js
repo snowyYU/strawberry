@@ -14,6 +14,12 @@ SignRecordSchema.pre('save', function (next) {
   next()
 })
 
+SignRecordSchema.statics = {
+  findByUid(uid) {
+    return this.findOne({ uid: uid }).sort({ created: -1 })
+  },
+}
+
 const SignRecordModel = mongoose.model('sign_record', SignRecordSchema)
 
 export default SignRecordModel
